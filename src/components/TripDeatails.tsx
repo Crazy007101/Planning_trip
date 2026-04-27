@@ -4,6 +4,7 @@ import { Box, TextField, Typography } from '@mui/material';
 export default function TripDetails() {
   const [flight, setFlight] = useState('');
   const [hotel, setHotel] = useState('');
+  const [address, setAddress] = useState('');
 
   return (
     <Box sx={{ mt: 5 }}>
@@ -26,6 +27,15 @@ export default function TripDetails() {
         label="Hotel name"
         value={hotel}
         onChange={(e) => setHotel(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+
+      <TextField
+        fullWidth
+        label="Address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        sx={{ mb: 2 }}
       />
     </Box>
   );
