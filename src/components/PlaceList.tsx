@@ -1,63 +1,112 @@
 import { useState } from 'react';
-import { Box, TextField, Button, Typography, IconButton, List, ListItem } from '@mui/material';
+import { Box, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PlacesSearch from './PlacesSearch';
+import CheckIcon from '@mui/icons-material/Check';
+import UndoIcon from '@mui/icons-material/Undo';
+
+type Place = {
+  id: number;
+  name: string;
+  lat: number;
+  lng: number;
+  visited: boolean;
+};
 
 export default function PlacesList() {
-  const [place, setPlace] = useState('');
-  const [places, setPlaces] = useState([]);
+  const [places, setPlaces] = useState<Place[]>([]);
 
-  const addPlace = () => {
-    if (!place.trim()) return;
-
-    setPlaces([...places, place]);
-    setPlace('');
+  const deletePlace = (id: number) => {
+    setPlaces(places.filter((p) => p.id !== id));
   };
 
-  const deletePlace = (index) => {
-    setPlaces(places.filter((_, i) => i !== index));
+  const addPlaceFromSearch = (place: any) => {
+    setPlaces([
+      ...places,
+      {
+        id: Date.now(),
+        name: place.display_name,
+        lat: Number(place.lat),
+        lng: Number(place.lon),
+        visited: false,
+      },
+    ]);
+  };
+
+  const toggleVisited = (id: number) => {
+    setPlaces((prev) =>
+      prev.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              visited: !p.visited,
+            }
+          : p,
+      ),
+    );
   };
 
   return (
     <Box sx={{ mt: 4 }}>
-      {/* Заголовок */}
       <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
         Places to visit
       </Typography>
 
-      {/* Input + button */}
-      <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-        <TextField
-          fullWidth
-          size="small"
-          label="Add place (e.g. Paris)"
-          value={place}
-          onChange={(e) => setPlace(e.target.value)}
-        />
+      <PlacesSearch onSelect={addPlaceFromSearch} />
 
-        <Button variant="contained" onClick={addPlace}>
-          Add
-        </Button>
-      </Box>
-
-      {/* List */}
       <List>
-        {places.map((p, index) => (
+        {places.map((p) => (
           <ListItem
-            key={index}
+            key={p.id}
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
-              background: '#f8fafc',
+              alignItems: 'center',
               mb: 1,
-              borderRadius: 2,
               px: 2,
+              py: 1.2,
+              borderRadius: 2,
+              backgroundColor: p.visited ? '#f1f5f9' : '#ffffff',
+              border: '1px solid',
+              borderColor: p.visited ? '#e2e8f0' : '#e5e7eb',
             }}
           >
-            {p}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <ListItemText
+                primary={p.name}
+                sx={{
+                  textDecoration: p.visited ? 'line-through' : 'none',
+                  color: p.visited ? '#64748b' : '#0f172a',
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              />
+            </Box>
 
-            <IconButton onClick={() => deletePlace(index)} size="small">
-              <DeleteIcon />
-            </IconButton>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 0.5,
+                flexShrink: 0,
+                minWidth: 96,
+                justifyContent: 'flex-end',
+              }}
+            >
+              <IconButton
+                onClick={() => toggleVisited(p.id)}
+                size="small"
+                sx={{
+                  color: p.visited ? '#22c55e' : '#94a3b8',
+                }}
+              >
+                {p.visited ? <UndoIcon /> : <CheckIcon />}
+              </IconButton>
+
+              <IconButton onClick={() => deletePlace(p.id)} size="small" sx={{ color: '#ef4444' }}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
           </ListItem>
         ))}
       </List>
