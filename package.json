@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.21",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.1.0",
@@ -24,8 +25,10 @@
     "@mui/icons-material": "^7.3.10",
     "@mui/material": "^7.3.9",
     "@mui/x-date-pickers": "^9.0.3",
+    "@react-google-maps/api": "^2.20.8",
     "@vitejs/plugin-react": "^5.1.2",
     "dayjs": "^1.11.20",
+    "leaflet": "^1.9.4",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^7.13.2"
