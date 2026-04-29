@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import type { Trip } from '../types/types';
+import { useNavigate } from 'react-router-dom';
 
 export default function TripsList() {
   const [trips, setTrips] = useState<Trip[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const saved = localStorage.getItem('trips');
@@ -49,6 +51,9 @@ export default function TripsList() {
           </CardContent>
         </Card>
       ))}
+      <Button variant="contained" onClick={() => navigate('/')}>
+        Back
+      </Button>
     </Box>
   );
 }
