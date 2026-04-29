@@ -1,11 +1,14 @@
-import { useState } from 'react';
 import { Box, TextField, Typography } from '@mui/material';
+import type { TripDetailsProps } from '../types/types.ts';
 
-export default function TripDetails() {
-  const [flight, setFlight] = useState('');
-  const [hotel, setHotel] = useState('');
-  const [address, setAddress] = useState('');
-
+export default function TripDetails({
+  flight,
+  setFlight,
+  hotel,
+  setHotel,
+  address,
+  setAddress,
+}: TripDetailsProps) {
   return (
     <Box sx={{ mt: 5 }}>
       <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import TripHeader from '../components/TripHeader';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -9,11 +9,31 @@ import PlacesList from './PlaceList.tsx';
 import Checklist from './CheckList.tsx';
 import TripDetails from './TripDeatails.tsx';
 import MapView from './MapView.tsx';
+import type { ChecklistItem, Place, Trip } from '../types/types.ts';
 
 export default function Layout() {
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [flight, setFlight] = useState('');
+  const [hotel, setHotel] = useState('');
+  const [address, setAddress] = useState('');
+  const [items, setItems] = useState<ChecklistItem[]>([]);
+
+  const buildTrip = (): Trip => {
+    return {
+      id: Date.now(),
+      title,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      places,
+      items,
+      flight,
+      hotelName: hotel,
+      hotelAddress: address,
+    };
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -40,14 +60,37 @@ export default function Layout() {
             setEndDate={setEndDate}
           />
 
-          <PlacesList />
-          <Checklist />
-          <TripDetails />
+          <PlacesList places={places} setPlaces={setPlaces} />
+          <Checklist items={items} setItems={setItems} />
+          <TripDetails
+            flight={flight}
+            setFlight={setFlight}
+            hotel={hotel}
+            setHotel={setHotel}
+            address={address}
+            setAddress={setAddress}
+          />
+          <Button
+            variant="contained"
+            onClick={() => {
+              const trip = buildTrip();
+
+              console.log('🚀 Trip object:', trip); // 👈 проверка данных
+
+              const savedTrips = JSON.parse(localStorage.getItem('trips') || '[]');
+
+              localStorage.setItem('trips', JSON.stringify([...savedTrips, trip]));
+
+              console.log('💾 Saved trips:', [...savedTrips, trip]); // 👈 что ушло в storage
+            }}
+          >
+            Save Trip
+          </Button>
         </Box>
 
         {/* RIGHT MAP */}
         <Box sx={{ flex: 1, height: '100vh' }}>
-          <MapView />
+          <MapView places={places} />
         </Box>
       </Box>
     </LocalizationProvider>

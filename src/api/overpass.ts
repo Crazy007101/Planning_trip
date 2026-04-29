@@ -7,11 +7,10 @@ export const fetchAttractionsByCity = async (lat: number, lon: number) => {
   cityController = new AbortController();
 
   const query = `
-  [out:json][timeout:25];
+  [out:json][timeout:60];
 
   (
-    node["tourism"~"museum|attraction|viewpoint"](around:3000,${lat},${lon});
-    node["historic"](around:3000,${lat},${lon});
+    node(around:1500,${lat},${lon})["tourism"];
   );
 
   out body 10;

@@ -4,12 +4,8 @@ import { TextField, List, ListItem, ListItemText, Paper, Box } from '@mui/materi
 import { geocodeCity } from '../api/nominatim';
 import { fetchAttractionsByCity, fetchAttractionsByName } from '../api/overpass';
 import { useDebounce } from '../hooks/useDebounce';
-
-type ApiPlace = {
-  display_name: string;
-  lat: string;
-  lon: string;
-};
+import type { ApiPlace } from '../types/types.ts';
+import { getCache, setCache } from '../utilis/cache.ts';
 
 export default function PlacesSearch({ onSelect }: { onSelect: (place: ApiPlace) => void }) {
   const [query, setQuery] = useState('');
@@ -30,8 +26,18 @@ export default function PlacesSearch({ onSelect }: { onSelect: (place: ApiPlace)
       return;
     }
 
+    const cacheKey = value.toLowerCase();
+
+    // 🔥 1. ПРОВЕРЯЕМ КЭШ
+    const cached = getCache(cacheKey);
+    if (cached) {
+      setResults(cached);
+      setOpen(true);
+      return;
+    }
+
     try {
-      // 1. ищем POI по названию
+      // 2. поиск POI
       const pois = await fetchAttractionsByName(value);
 
       if (pois.length > 0) {
@@ -46,14 +52,16 @@ export default function PlacesSearch({ onSelect }: { onSelect: (place: ApiPlace)
           lon: String(item.lon),
         }));
 
-        setResults(mapped.slice(0, 10));
+        const result = mapped.slice(0, 10);
+
+        setResults(result);
+        setCache(cacheKey, result); // 💾 сохраняем
         setOpen(true);
         return;
       }
 
-      // 2. если POI нет → город
+      // 3. если не POI → город
       const city = await geocodeCity(value);
-      setCityCoords(city);
 
       const data = await fetchAttractionsByCity(city.lat, city.lon);
 
@@ -72,8 +80,9 @@ export default function PlacesSearch({ onSelect }: { onSelect: (place: ApiPlace)
         .slice(0, 10);
 
       setResults(mapped);
+      setCache(cacheKey, mapped); // 💾 сохраняем
       setOpen(true);
-    } catch (e) {
+    } catch {
       setResults([]);
       setOpen(false);
     }

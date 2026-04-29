@@ -11,31 +11,41 @@ import {
   ListItemText,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import type { ChecklistProps } from '../types/types.ts';
 
-type ChecklistItem = {
-  id: number;
-  text: string;
-  done: boolean;
-};
-
-export default function Checklist() {
-  const [item, setItem] = useState<string>('');
-  const [list, setList] = useState<ChecklistItem[]>([]);
+export default function Checklist({ items, setItems }: ChecklistProps) {
+  const [input, setInput] = useState('');
 
   const addItem = () => {
-    if (!item.trim()) return;
+    if (!input.trim()) return;
 
-    setList([...list, { id: Date.now(), text: item, done: false }]);
+    setItems((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        text: input,
+        done: false,
+      },
+    ]);
 
-    setItem('');
+    setInput('');
   };
 
   const toggleItem = (id: number) => {
-    setList(list.map((el) => (el.id === id ? { ...el, done: !el.done } : el)));
+    setItems((prev) =>
+      prev.map((el) =>
+        el.id === id
+          ? {
+              ...el,
+              done: !el.done,
+            }
+          : el,
+      ),
+    );
   };
 
   const deleteItem = (id: number) => {
-    setList(list.filter((el) => el.id !== id));
+    setItems((prev) => prev.filter((el) => el.id !== id));
   };
 
   return (
@@ -49,8 +59,8 @@ export default function Checklist() {
           fullWidth
           size="small"
           label="Add item"
-          value={item}
-          onChange={(e) => setItem(e.target.value)}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
 
         <Button variant="contained" onClick={addItem}>
@@ -59,7 +69,7 @@ export default function Checklist() {
       </Box>
 
       <List>
-        {list.map((el) => (
+        {items.map((el) => (
           <ListItem
             key={el.id}
             sx={{

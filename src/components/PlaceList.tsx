@@ -1,49 +1,40 @@
-import { useState } from 'react';
 import { Box, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
+
 import DeleteIcon from '@mui/icons-material/Delete';
-import PlacesSearch from './PlacesSearch';
 import CheckIcon from '@mui/icons-material/Check';
 import UndoIcon from '@mui/icons-material/Undo';
 
-type Place = {
-  id: number;
-  name: string;
-  lat: number;
-  lng: number;
-  visited: boolean;
-};
+import PlacesSearch from './PlacesSearch';
+import type { Place } from '../types/types.ts';
 
-export default function PlacesList() {
-  const [places, setPlaces] = useState<Place[]>([]);
-
+export default function PlacesList({
+  places,
+  setPlaces,
+}: {
+  places: Place[];
+  setPlaces: React.Dispatch<React.SetStateAction<Place[]>>;
+}) {
+  // ❌ delete
   const deletePlace = (id: number) => {
-    setPlaces(places.filter((p) => p.id !== id));
+    setPlaces((prev) => prev.filter((p) => p.id !== id));
   };
 
+  // ➕ add
   const addPlaceFromSearch = (place: any) => {
-    setPlaces([
-      ...places,
-      {
-        id: Date.now(),
-        name: place.display_name,
-        lat: Number(place.lat),
-        lng: Number(place.lon),
-        visited: false,
-      },
-    ]);
+    const newPlace: Place = {
+      id: Date.now(),
+      name: place.display_name,
+      lat: Number(place.lat),
+      lng: Number(place.lon),
+      visited: false,
+    };
+
+    setPlaces((prev) => [...prev, newPlace]);
   };
 
+  // 🔄 toggle visited
   const toggleVisited = (id: number) => {
-    setPlaces((prev) =>
-      prev.map((p) =>
-        p.id === id
-          ? {
-              ...p,
-              visited: !p.visited,
-            }
-          : p,
-      ),
-    );
+    setPlaces((prev) => prev.map((p) => (p.id === id ? { ...p, visited: !p.visited } : p)));
   };
 
   return (
@@ -52,8 +43,10 @@ export default function PlacesList() {
         Places to visit
       </Typography>
 
+      {/* 🔍 поиск */}
       <PlacesSearch onSelect={addPlaceFromSearch} />
 
+      {/* 📋 список */}
       <List>
         {places.map((p) => (
           <ListItem
