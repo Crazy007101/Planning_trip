@@ -8,11 +8,10 @@ export default function MapView({ places }: { places: Place[] }) {
   const mapInstance = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
 
-  // 🗺 создаём карту 1 раз
   useEffect(() => {
     if (!mapRef.current) return;
 
-    const map = L.map(mapRef.current).setView([48.8566, 2.3522], 5);
+    const map = L.map(mapRef.current).setView([55.7558, 37.6173], 5);
 
     map.attributionControl.setPrefix(false);
 
@@ -27,24 +26,20 @@ export default function MapView({ places }: { places: Place[] }) {
     };
   }, []);
 
-  // 📍 обновляем маркеры при изменении places
   useEffect(() => {
     if (!mapInstance.current) return;
 
     const map = mapInstance.current;
 
-    // ❌ удаляем старые маркеры
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
-    // ✅ добавляем новые
     places.forEach((place) => {
       const marker = L.marker([place.lat, place.lng]).addTo(map).bindPopup(place.name);
 
       markersRef.current.push(marker);
     });
 
-    // 🎯 центрируем на последнем добавленном месте
     if (places.length > 0) {
       const last = places[places.length - 1];
       map.setView([last.lat, last.lng], 13);

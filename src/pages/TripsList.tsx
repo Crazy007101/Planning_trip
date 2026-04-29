@@ -5,7 +5,6 @@ import type { Trip } from '../types/types';
 export default function TripsList() {
   const [trips, setTrips] = useState<Trip[]>([]);
 
-  // 📦 загрузка из localStorage
   useEffect(() => {
     const saved = localStorage.getItem('trips');
     if (saved) {
@@ -13,7 +12,6 @@ export default function TripsList() {
     }
   }, []);
 
-  // 🗑 удалить trip
   const deleteTrip = (id: number) => {
     const updated = trips.filter((t) => t.id !== id);
     setTrips(updated);

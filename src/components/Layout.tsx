@@ -72,24 +72,54 @@ export default function Layout() {
             address={address}
             setAddress={setAddress}
           />
-          <Button
-            variant="contained"
-            onClick={() => {
-              const trip = buildTrip();
-
-              console.log('🚀 Trip object:', trip);
-
-              const savedTrips = JSON.parse(localStorage.getItem('trips') || '[]');
-
-              localStorage.setItem('trips', JSON.stringify([...savedTrips, trip]));
-
-              console.log('💾 Saved trips:', [...savedTrips, trip]);
-
-              navigate('/trips');
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mt: 3,
+              gap: 2,
             }}
           >
-            Save Trip
-          </Button>
+            {/* LEFT: primary action */}
+            <Button
+              variant="contained"
+              onClick={() => {
+                const trip = buildTrip();
+
+                console.log('🚀 Trip object:', trip);
+
+                const savedTrips = JSON.parse(localStorage.getItem('trips') || '[]');
+
+                const updatedTrips = [...savedTrips, trip];
+
+                localStorage.setItem('trips', JSON.stringify(updatedTrips));
+
+                console.log('💾 Saved trips:', updatedTrips);
+
+                navigate('/trips');
+              }}
+            >
+              Save Trip
+            </Button>
+
+            {/* RIGHT: secondary action */}
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/')}
+              sx={{
+                backgroundColor: '#fff',
+                color: '#0f172a',
+                borderColor: '#e2e8f0',
+                '&:hover': {
+                  backgroundColor: '#f8fafc',
+                  borderColor: '#cbd5e1',
+                },
+              }}
+            >
+              Back
+            </Button>
+          </Box>
         </Box>
 
         {/* RIGHT MAP */}
