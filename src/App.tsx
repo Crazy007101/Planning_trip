@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import CreateJourney from './pages/CreateJourney';
 import Home from './pages/Home.tsx';
 import TripsList from './pages/TripsList.tsx';
+import ScrollToTop from './components/ScrollToTop.tsx';
 
 const theme = createTheme({
   palette: {
@@ -14,6 +15,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreateJourney />} />
