@@ -14,6 +14,8 @@ export default function MapView({ places }: { places: Place[] }) {
 
     const map = L.map(mapRef.current).setView([48.8566, 2.3522], 5);
 
+    map.attributionControl.setPrefix(false);
+
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap',
     }).addTo(map);
