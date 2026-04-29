@@ -10,6 +10,7 @@ import Checklist from './CheckList.tsx';
 import TripDetails from './TripDeatails.tsx';
 import MapView from './MapView.tsx';
 import type { ChecklistItem, Place, Trip } from '../types/types.ts';
+import { useNavigate } from 'react-router-dom';
 
 export default function Layout() {
   const [title, setTitle] = useState('');
@@ -20,6 +21,7 @@ export default function Layout() {
   const [hotel, setHotel] = useState('');
   const [address, setAddress] = useState('');
   const [items, setItems] = useState<ChecklistItem[]>([]);
+  const navigate = useNavigate();
 
   const buildTrip = (): Trip => {
     return {
@@ -75,13 +77,15 @@ export default function Layout() {
             onClick={() => {
               const trip = buildTrip();
 
-              console.log('🚀 Trip object:', trip); // 👈 проверка данных
+              console.log('🚀 Trip object:', trip);
 
               const savedTrips = JSON.parse(localStorage.getItem('trips') || '[]');
 
               localStorage.setItem('trips', JSON.stringify([...savedTrips, trip]));
 
-              console.log('💾 Saved trips:', [...savedTrips, trip]); // 👈 что ушло в storage
+              console.log('💾 Saved trips:', [...savedTrips, trip]);
+
+              navigate('/trips');
             }}
           >
             Save Trip

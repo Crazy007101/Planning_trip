@@ -66,7 +66,7 @@ export default function Header() {
 
             <Button
               variant="outlined"
-              onClick={() => navigate('/list')}
+              onClick={() => navigate('/trips')}
               sx={{
                 color: '#fff',
                 borderColor: 'rgba(255,255,255,0.6)',

@@ -76,7 +76,7 @@ export default function HeroSection() {
             <Button
               variant="outlined"
               size="large"
-              onClick={() => navigate('/list')}
+              onClick={() => navigate('/trips')}
               sx={{
                 color: '#fff',
                 borderColor: 'rgba(255,255,255,0.7)',
