@@ -1,7 +1,7 @@
 let cityController: AbortController | null = null;
 let nameController: AbortController | null = null;
 
-// 🌍 CITY SEARCH
+//  CITY SEARCH
 export const fetchAttractionsByCity = async (lat: number, lon: number) => {
   if (cityController) cityController.abort();
   cityController = new AbortController();
@@ -10,7 +10,7 @@ export const fetchAttractionsByCity = async (lat: number, lon: number) => {
   [out:json][timeout:60];
 
   (
-    node(around:1500,${lat},${lon})["tourism"];
+    node(around:3000,${lat},${lon})["tourism"];
   );
 
   out body 10;
@@ -31,7 +31,7 @@ export const fetchAttractionsByCity = async (lat: number, lon: number) => {
   }
 };
 
-// 🔎 NAME SEARCH
+//  NAME SEARCH
 export const fetchAttractionsByName = async (name: string) => {
   if (nameController) nameController.abort();
   nameController = new AbortController();

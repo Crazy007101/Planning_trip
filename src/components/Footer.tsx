@@ -45,7 +45,7 @@ export default function Footer() {
               Create Journey
             </Link>
             <Link
-              href="/list"
+              href="/trips"
               underline="none"
               color="inherit"
               display="block"

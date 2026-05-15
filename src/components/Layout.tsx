@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TripHeader from '../components/TripHeader';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,7 +10,7 @@ import Checklist from './CheckList.tsx';
 import TripDetails from './TripDeatails.tsx';
 import MapView from './MapView.tsx';
 import type { ChecklistItem, Place, Trip } from '../types/types.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Layout() {
   const [title, setTitle] = useState('');
@@ -22,10 +22,12 @@ export default function Layout() {
   const [address, setAddress] = useState('');
   const [items, setItems] = useState<ChecklistItem[]>([]);
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
 
   const buildTrip = (): Trip => {
     return {
-      id: Date.now(),
+      id: isEditMode ? Number(id) : Date.now(),
       title,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
@@ -36,6 +38,34 @@ export default function Layout() {
       hotelAddress: address,
     };
   };
+
+  useEffect(() => {
+    if (!id) return;
+
+    const saved = localStorage.getItem('trips');
+
+    if (!saved) return;
+
+    const trips: Trip[] = JSON.parse(saved);
+
+    const foundTrip = trips.find((t) => t.id === Number(id));
+
+    if (!foundTrip) return;
+
+    setTitle(foundTrip.title);
+    setStartDate(dayjs(foundTrip.startDate));
+    setEndDate(dayjs(foundTrip.endDate));
+
+    setPlaces(foundTrip.places);
+
+    setItems(foundTrip.items);
+
+    setFlight(foundTrip.flight);
+
+    setHotel(foundTrip.hotelName);
+
+    setAddress(foundTrip.hotelAddress);
+  }, [id]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -89,9 +119,15 @@ export default function Layout() {
 
                 console.log('🚀 Trip object:', trip);
 
-                const savedTrips = JSON.parse(localStorage.getItem('trips') || '[]');
+                const savedTrips: Trip[] = JSON.parse(localStorage.getItem('trips') || '[]');
 
-                const updatedTrips = [...savedTrips, trip];
+                let updatedTrips: Trip[];
+
+                if (isEditMode) {
+                  updatedTrips = savedTrips.map((t) => (t.id === Number(id) ? trip : t));
+                } else {
+                  updatedTrips = [...savedTrips, trip];
+                }
 
                 localStorage.setItem('trips', JSON.stringify(updatedTrips));
 
@@ -100,13 +136,13 @@ export default function Layout() {
                 navigate('/trips');
               }}
             >
-              Save Trip
+              {isEditMode ? 'Update Trip' : 'Save Trip'}
             </Button>
 
             {/* RIGHT: secondary action */}
             <Button
               variant="outlined"
-              onClick={() => navigate('/')}
+              onClick={() => navigate(isEditMode ? '/trips' : '/')}
               sx={{
                 backgroundColor: '#fff',
                 color: '#0f172a',

@@ -45,7 +45,9 @@ export default function TripsList() {
               📍 Places: {trip.places.length}
             </Typography>
 
-            <Button color="error" sx={{ mt: 2 }} onClick={() => deleteTrip(trip.id)}>
+            <Button onClick={() => navigate(`/trip/${trip.id}`)}>Details</Button>
+
+            <Button color="error" onClick={() => deleteTrip(trip.id)}>
               Delete
             </Button>
           </CardContent>

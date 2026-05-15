@@ -4,6 +4,7 @@ import CreateJourney from './pages/CreateJourney';
 import Home from './pages/Home.tsx';
 import TripsList from './pages/TripsList.tsx';
 import ScrollToTop from './components/ScrollToTop.tsx';
+import Layout from './components/Layout.tsx';
 
 const theme = createTheme({
   palette: {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreateJourney />} />
         <Route path="/trips" element={<TripsList />} />
+        <Route path="/trip/:id" element={<Layout />} />
       </Routes>
     </ThemeProvider>
   );
