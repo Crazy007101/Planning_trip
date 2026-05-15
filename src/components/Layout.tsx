@@ -11,6 +11,10 @@ import TripDetails from './TripDeatails.tsx';
 import MapView from './MapView.tsx';
 import type { ChecklistItem, Place, Trip } from '../types/types.ts';
 import { useNavigate, useParams } from 'react-router-dom';
+import Img1 from '../assets/photo1.jpeg';
+import Img2 from '../assets/photo2.jpeg';
+import Img3 from '../assets/photo3.jpeg';
+import Img4 from '../assets/photo4.jpeg';
 
 export default function Layout() {
   const [title, setTitle] = useState('');
@@ -25,6 +29,10 @@ export default function Layout() {
   const { id } = useParams();
   const isEditMode = Boolean(id);
 
+  const tripImages = [Img1, Img2, Img3, Img4];
+
+  const [coverImage] = useState(() => tripImages[Math.floor(Math.random() * tripImages.length)]);
+
   const buildTrip = (): Trip => {
     return {
       id: isEditMode ? Number(id) : Date.now(),
@@ -36,6 +44,7 @@ export default function Layout() {
       flight,
       hotelName: hotel,
       hotelAddress: address,
+      coverImage,
     };
   };
 
@@ -66,6 +75,9 @@ export default function Layout() {
 
     setAddress(foundTrip.hotelAddress);
   }, [id]);
+
+  console.log('tripImages:', tripImages);
+  console.log('coverImage:', coverImage);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

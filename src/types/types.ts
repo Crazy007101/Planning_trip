@@ -42,4 +42,5 @@ export type Trip = {
   flight: string;
   hotelName: string;
   hotelAddress: string;
+  coverImage: string;
 };
