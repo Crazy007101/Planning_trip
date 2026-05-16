@@ -17,7 +17,7 @@ export const fetchAttractionsByCity = async (lat: number, lon: number) => {
   `;
 
   try {
-    const res = await fetch('https://overpass.kumi.systems/api/interpreter', {
+    const res = await fetch('https://overpass-api.de/api/interpreter', {
       method: 'POST',
       body: query,
       signal: cityController.signal,
